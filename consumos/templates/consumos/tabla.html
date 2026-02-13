@@ -1,0 +1,123 @@
+{% load custom_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Consumos</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+            background: #f4f6f8;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background: #2d6cdf;
+            color: white;
+        }
+
+        /* Más espacio visual en columnas de cantidad */
+        td:nth-child(5),
+        td:nth-child(6) {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .filters {
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 6px;
+            margin-right: 10px;
+        }
+
+        .num {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .unit {
+            color: #666;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Predicción Consumo</h2>
+
+    <form method="get" class="filters" id="filtroForm">
+        <label>Local:</label>
+        <select name="local" onchange="document.getElementById('filtroForm').submit()">
+            <option value="">Todos</option>
+            {% for l in locales %}
+                <option value="{{ l }}" {% if l == local_sel %}selected{% endif %}>
+                    {{ l }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label>Fecha:</label>
+        <select name="fecha" onchange="document.getElementById('filtroForm').submit()">
+            <option value="">Todas</option>
+            {% for f in fechas %}
+                <option value="{{ f.value }}" {% if fecha_sel == f.value %}selected{% endif %}>
+                    {{ f.label }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label>Producto:</label>
+        <select name="producto" onchange="document.getElementById('filtroForm').submit()">
+            <option value="">Todos</option>
+            {% for p in productos %}
+                <option value="{{ p }}" {% if p == producto_sel %}selected{% endif %}>
+                    {{ p }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                {% for col in columnas %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for fila in tabla %}
+                <tr>
+                    {% for col in columnas %}
+                        <td>{{ fila|get_item:col|safe }}</td>
+                    {% endfor %}
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="10">Sin resultados</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
