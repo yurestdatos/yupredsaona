@@ -44,12 +44,19 @@ def tabla_consumos(request):
     df["u_medida"].astype(str) +
     "</span>")
 
-    df["CANTIDAD CONV"] = (
-        "<span class='num'>" +
-        df["cantidad_conv"].apply(formatear_num) +
-        "</span><span class='unit'>" +
-        df["u_conv"].astype(str) +
-        "</span>")
+    def formatear_cantidad_conv(row):
+        num = formatear_num(row["cantidad_conv"])
+        if num == "":
+            return ""
+        return (
+            "<span class='num'>" + num +
+            "</span><span class='unit'>" +
+            str(row["u_conv"]) +
+            "</span>"
+        )
+
+    df["CANTIDAD CONV"] = df.apply(formatear_cantidad_conv, axis=1)
+
 
 
 
